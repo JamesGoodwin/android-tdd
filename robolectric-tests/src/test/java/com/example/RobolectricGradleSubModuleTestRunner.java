@@ -6,6 +6,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.res.Fs;
 
+import java.io.File;
+
 /**
  * A Robolectric TestRunner for running tests in a Gradle SubModule.
  * Created by jasondonmoyer on 11/24/14.
@@ -19,22 +21,33 @@ public class RobolectricGradleSubModuleTestRunner extends RobolectricTestRunner 
     }
 
     protected String getAndroidManifestPath() {
-        return "../deckard-gradle/app/src/main/AndroidManifest.xml";
+        return "../app/src/main/AndroidManifest.xml";
     }
 
     protected String getResPath() {
-        return "../deckard-gradle/app/src/main/res";
+        return "../app/src/main/res";
     }
 
     @Override
     protected final AndroidManifest getAppManifest(Config config) {
-        return new AndroidManifest(Fs.fileFromPath(getAndroidManifestPath()),
-                Fs.fileFromPath(getResPath())) {
+        String androidManifestPath = getFilePath(getAndroidManifestPath());
+        String resPath = getFilePath(getResPath());
+
+        return new AndroidManifest(Fs.fileFromPath(androidManifestPath), Fs.fileFromPath(resPath)) {
             @Override
             public int getTargetSdkVersion() {
                 return MAX_SDK_SUPPORTED_BY_ROBOLECTRIC;
             }
         };
+    }
+
+    // allow paths to be resolved correctly when running between IDEA/gradle
+    private String getFilePath(String filePath) {
+        File file = new File(filePath);
+        if(!file.exists()) {
+            filePath = filePath.replace("app", "deckard-gradle/app");
+        }
+        return filePath;
     }
 
 }
