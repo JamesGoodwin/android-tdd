@@ -54,3 +54,8 @@ dependencies {
     //add all of the android gradle plugin bootclasspath items to our test compile classpath
     testCompile files(androidModule.plugins.findPlugin("com.android.application").getBootClasspath())
 }
+
+tasks.withType(Test) {
+    scanForTestClasses = false
+    include "**/*Test.class" // Ant pattern that matches your test class files
+}
