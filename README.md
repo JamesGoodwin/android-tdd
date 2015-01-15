@@ -1,6 +1,5 @@
 
-Important
---------
+#### Important
 To get the Espresso tests to run in Android Studio you must create a new test configuration:
 
 Open Run menu | Edit Configurations
