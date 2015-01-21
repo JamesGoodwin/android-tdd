@@ -7,12 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.test.espresso.IdlingResource;
 
-public class LoadingActivity extends Activity implements LoaderManager.LoaderCallbacks<Boolean>, IdlingResource {
+public class LoadingActivity extends Activity implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    private ProgressDialog progressDialog;   
-    private ResourceCallback resourceCallback;
+    private ProgressDialog progressDialog;
+    private boolean loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +30,7 @@ public class LoadingActivity extends Activity implements LoaderManager.LoaderCal
 
     @Override
     public Loader<Boolean> onCreateLoader(int i, Bundle bundle) {
+        this.loading = true;
         progressDialog = ProgressDialog.show(
                 this,
                 getString(R.string.loading),
@@ -49,11 +49,11 @@ public class LoadingActivity extends Activity implements LoaderManager.LoaderCal
     @Override
     public void onLoadFinished(Loader<Boolean> booleanLoader, Boolean aBoolean) {
         hideProgressDialog();
-        
+
         Intent intent = new Intent(this, ResultActivity.class);
         startActivity(intent);
 
-        resourceCallback.onTransitionToIdle();
+        this.loading = false;
     }
 
     private void hideProgressDialog() {
@@ -64,20 +64,10 @@ public class LoadingActivity extends Activity implements LoaderManager.LoaderCal
 
     @Override
     public void onLoaderReset(Loader<Boolean> booleanLoader) {
+
     }
 
-    @Override
-    public String getName() {
-        return "LoadingActivity idling resource";
-    }
-
-    @Override
-    public boolean isIdleNow() {
-        return !progressDialog.isShowing();
-    }
-
-    @Override
-    public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
-        this.resourceCallback = resourceCallback;
+    public boolean isLoading() {
+        return loading;
     }
 }

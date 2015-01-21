@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
+    lintOptions {
+        disable 'InvalidPackage'
+    }
     packagingOptions {
         exclude 'LICENSE.txt'
         exclude 'META-INF/LICENSE'
@@ -30,7 +33,6 @@ android {
 }
 
 dependencies {
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
 }
-
