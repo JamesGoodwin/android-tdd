@@ -10,7 +10,8 @@ import android.support.v7.app.ActionBarActivity;
 
 public class LoadingActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    private ProgressDialog progressDialog;   
+    private ProgressDialog progressDialog;
+    private boolean loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,15 +21,16 @@ public class LoadingActivity extends ActionBarActivity implements LoaderManager.
         LoaderManager loaderManager = getLoaderManager();
         Loader loader = loaderManager.getLoader(LongRunningLoader.class.hashCode());
 
-//        if (loader == null) {
-//            loaderManager.initLoader(LongRunningLoader.class.hashCode(), null, this);
-//        } else {
-//            loaderManager.restartLoader(LongRunningLoader.class.hashCode(), null, this);
-//        }
+        if (loader == null) {
+            loaderManager.initLoader(LongRunningLoader.class.hashCode(), null, this);
+        } else {
+            loaderManager.restartLoader(LongRunningLoader.class.hashCode(), null, this);
+        }
     }
 
     @Override
     public Loader<Boolean> onCreateLoader(int i, Bundle bundle) {
+        this.loading = true;
         progressDialog = ProgressDialog.show(
                 this,
                 getString(R.string.loading),
@@ -47,9 +49,11 @@ public class LoadingActivity extends ActionBarActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader<Boolean> booleanLoader, Boolean aBoolean) {
         hideProgressDialog();
-        
+
         Intent intent = new Intent(this, ResultActivity.class);
         startActivity(intent);
+
+        this.loading = false;
     }
 
     private void hideProgressDialog() {
@@ -60,6 +64,10 @@ public class LoadingActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     public void onLoaderReset(Loader<Boolean> booleanLoader) {
+
     }
 
+    public boolean isLoading() {
+        return loading;
+    }
 }

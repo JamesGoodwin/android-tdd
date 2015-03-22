@@ -1,9 +1,14 @@
 package com.github.jamesgoodwin.androidtesting;
 
 import android.app.Activity;
+import android.os.Bundle;
 
-/**
- * Created by jamesgoodwin on 19/01/15.
- */
 public class ResultActivity extends Activity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.result);
+    }
+
 }
