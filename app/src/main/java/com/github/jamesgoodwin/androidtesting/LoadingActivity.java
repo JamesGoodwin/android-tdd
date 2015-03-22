@@ -1,18 +1,16 @@
 package com.github.jamesgoodwin.androidtesting;
 
-import android.app.Activity;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.test.espresso.IdlingResource;
+import android.support.v7.app.ActionBarActivity;
 
-public class LoadingActivity extends Activity implements LoaderManager.LoaderCallbacks<Boolean>, IdlingResource {
+public class LoadingActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Boolean> {
 
     private ProgressDialog progressDialog;   
-    private ResourceCallback resourceCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +20,11 @@ public class LoadingActivity extends Activity implements LoaderManager.LoaderCal
         LoaderManager loaderManager = getLoaderManager();
         Loader loader = loaderManager.getLoader(LongRunningLoader.class.hashCode());
 
-        if (loader == null) {
-            loaderManager.initLoader(LongRunningLoader.class.hashCode(), null, this);
-        } else {
-            loaderManager.restartLoader(LongRunningLoader.class.hashCode(), null, this);
-        }
+//        if (loader == null) {
+//            loaderManager.initLoader(LongRunningLoader.class.hashCode(), null, this);
+//        } else {
+//            loaderManager.restartLoader(LongRunningLoader.class.hashCode(), null, this);
+//        }
     }
 
     @Override
@@ -52,8 +50,6 @@ public class LoadingActivity extends Activity implements LoaderManager.LoaderCal
         
         Intent intent = new Intent(this, ResultActivity.class);
         startActivity(intent);
-
-        resourceCallback.onTransitionToIdle();
     }
 
     private void hideProgressDialog() {
@@ -66,18 +62,4 @@ public class LoadingActivity extends Activity implements LoaderManager.LoaderCal
     public void onLoaderReset(Loader<Boolean> booleanLoader) {
     }
 
-    @Override
-    public String getName() {
-        return "LoadingActivity idling resource";
-    }
-
-    @Override
-    public boolean isIdleNow() {
-        return !progressDialog.isShowing();
-    }
-
-    @Override
-    public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
-        this.resourceCallback = resourceCallback;
-    }
 }
